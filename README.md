@@ -9,6 +9,8 @@ Commands are custom slash commands installed in `~/.claude/commands/` and invoke
 | Command | Invocation | Description |
 |---|---|---|
 | [cloud-api-adaptor](./cloud-api-adaptor/) | `/cloud-api-adaptor` | Set up, build, and test cloud-api-adaptor with libvirt locally (amd64, Ubuntu 24.04 podvm via mkosi) |
+| [aws-podvm-ami](./aws-podvm-ami/) | `/aws-podvm-ami` | Build a debug Ubuntu podvm mkosi image (TEE_PLATFORM=amd), upload to S3, and register as an AWS AMI |
+| [aws-eks-caa](./aws-eks-caa/) | `/aws-eks-caa` | Set up CAA on AWS EKS with a custom podvm AMI, run a peer-pod test workload, and tear everything down |
 
 ## Available Skills
 
@@ -60,6 +62,14 @@ Once installed, invoke a command with its slash command in any Claude Code sessi
 /cloud-api-adaptor setup
 /cloud-api-adaptor build --debug
 /cloud-api-adaptor test --filter TestLibvirtCreatePeerPod
+
+/aws-podvm-ami build
+/aws-podvm-ami upload --bucket my-bucket --region us-east-2
+/aws-podvm-ami all --bucket my-bucket --region us-east-2 --cleanup
+
+/aws-eks-caa setup --ami ami-0123456789abcdef0 --region us-east-2
+/aws-eks-caa test
+/aws-eks-caa teardown
 ```
 
 Run any command with no arguments for an interactive prompt.
