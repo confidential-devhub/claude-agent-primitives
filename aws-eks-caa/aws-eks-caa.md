@@ -361,7 +361,7 @@ echo "Credentials secret created."
 
 ### Step 5.5 — Install cert-manager (required by webhook subchart)
 
-The webhook subchart renders cert-manager `Certificate` and `Issuer` resources unconditionally — even when `webhook.enabled=false`. cert-manager CRDs must exist before `helm install` runs or it will fail at the resource-mapping stage.
+The webhook subchart requires cert-manager CRDs to exist before `helm install` runs or it will fail at the resource-mapping stage.
 
 ```bash
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
@@ -370,7 +370,7 @@ kubectl wait --for=condition=Available deployment -n cert-manager --all --timeou
 
 ### Step 6 — Install the CAA Helm chart
 
-Disable the webhook and resourceCtrl sub-charts for a minimal setup — they require cert-manager and additional RBAC that aren't needed for basic peer-pod testing. The CAA daemonset and kata-deploy are sufficient.
+Install with all subcharts enabled: the webhook injects peer-pod resources into pod specs, and the peerpod-ctrl garbage-collects dangling cloud resources. cert-manager (installed in step 5.5) is required by the webhook subchart.
 
 ```bash
 cd "$CHART_DIR"
@@ -378,8 +378,6 @@ helm install peerpods . \
     -f providers/aws.yaml \
     --set secrets.mode=reference \
     --set secrets.existingSecretName=my-provider-creds \
-    --set webhook.enabled=false \
-    --set resourceCtrl.enabled=false \
     --dependency-update \
     -n confidential-containers-system \
     --wait \
