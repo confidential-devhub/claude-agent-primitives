@@ -1,11 +1,11 @@
-# cloud-api-adaptor command
+# libvirt-kcli-caa command
 
 Manages the full local dev/test lifecycle for [cloud-api-adaptor](https://github.com/confidential-containers/cloud-api-adaptor) on libvirt (amd64). Builds an Ubuntu 24.04 podvm image via mkosi, manages the libvirt/kcli Kubernetes cluster, and runs e2e tests.
 
 ## Invocation
 
 ```
-/cloud-api-adaptor [setup | build [--debug] | test [--filter <TestRegex>] [--debug]]
+/libvirt-kcli-caa [setup | build [--debug] | test [--filter <TestRegex>] [--debug]]
 ```
 
 Run with no arguments for an interactive prompt.
@@ -74,5 +74,5 @@ The command checks for both of these automatically before every build and offers
 ## Install
 
 ```bash
-cp cloud-api-adaptor/cloud-api-adaptor.md ~/.claude/commands/cloud-api-adaptor.md
+cp libvirt-kcli-caa/libvirt-kcli-caa.md ~/.claude/commands/libvirt-kcli-caa.md
 ```

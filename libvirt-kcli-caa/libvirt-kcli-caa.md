@@ -1,5 +1,5 @@
 ---
-name: cloud-api-adaptor
+name: libvirt-kcli-caa
 description: Set up, build, and test cloud-api-adaptor with libvirt locally. Builds Ubuntu podvm via mkosi (amd64), manages the libvirt/kcli cluster, and runs e2e tests with optional test filtering and debug image support.
 argument-hint: "setup | build [--debug] | test [--filter <TestRegex>] [--debug] [--kbs]"
 allowed-tools:
@@ -320,7 +320,7 @@ Print:
 Setup complete.
 KUBECONFIG: ~/.kcli/clusters/peer-pods/auth/kubeconfig
 
-Next step: /cloud-api-adaptor build
+Next step: /libvirt-kcli-caa build
 ```
 
 ---
@@ -379,7 +379,7 @@ Build complete.
 Image: $CAA_ROOT/podvm-mkosi/build/podvm-ubuntu-amd64.qcow2
 Mode: [production|debug]
 
-Next step: /cloud-api-adaptor test
+Next step: /libvirt-kcli-caa test
 ```
 
 ---
@@ -394,14 +394,14 @@ export KUBECONFIG=~/.kcli/clusters/peer-pods/auth/kubeconfig
 kubectl get nodes --no-headers 2>/dev/null | grep -c Ready
 ```
 
-If 0 nodes ready, warn: "Cluster not running. Run `/cloud-api-adaptor setup` first."
+If 0 nodes ready, warn: "Cluster not running. Run `/libvirt-kcli-caa setup` first."
 
 Check image exists:
 ```bash
 ls "$CAA_ROOT/podvm-mkosi/build/podvm-ubuntu-amd64.qcow2" 2>/dev/null
 ```
 
-If missing, warn: "podvm image not found. Run `/cloud-api-adaptor build` first."
+If missing, warn: "podvm image not found. Run `/libvirt-kcli-caa build` first."
 
 **KBS tests require infrastructure setup before `make test-e2e`** — this mirrors the CI "Checkout KBS Repository" step and must be done manually for local runs.
 
