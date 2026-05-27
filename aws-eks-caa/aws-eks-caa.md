@@ -386,6 +386,46 @@ helm install peerpods . \
 echo "Helm install complete."
 ```
 
+### Step 6.5 — Patch CAA daemonset to mount host CA certificates
+
+**Only needed when using the published release image** (e.g. `v0.21.0-amd64`). The release build installs only `iptables` on `debian:trixie-slim` — no `ca-certificates`. The dev build (local `make` / custom ECR image) includes `openssh-client` which pulls in `ca-certificates` as a dependency, so it works without this patch.
+
+Without this, the Go AWS SDK fails TLS verification against `ec2.<region>.amazonaws.com` with `x509: certificate signed by unknown authority` on AL2023 nodes. Fix: mount the AL2023 host CA bundle into the container at the Debian-expected path.
+
+```bash
+export KUBECONFIG="$KUBECONFIG_FILE"
+
+kubectl patch daemonset cloud-api-adaptor-daemonset \
+    -n confidential-containers-system \
+    --type=json \
+    -p='[
+      {
+        "op": "add",
+        "path": "/spec/template/spec/volumes/-",
+        "value": {
+          "name": "host-ca-bundle",
+          "hostPath": {
+            "path": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem",
+            "type": "File"
+          }
+        }
+      },
+      {
+        "op": "add",
+        "path": "/spec/template/spec/containers/0/volumeMounts/-",
+        "value": {
+          "name": "host-ca-bundle",
+          "mountPath": "/etc/ssl/certs/ca-certificates.crt",
+          "readOnly": true
+        }
+      }
+    ]'
+
+kubectl rollout status daemonset/cloud-api-adaptor-daemonset \
+    -n confidential-containers-system --timeout=3m
+echo "CA bundle patch applied."
+```
+
 ### Step 7 — Verify deployment
 
 ```bash
