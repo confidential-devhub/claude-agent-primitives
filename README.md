@@ -8,7 +8,8 @@ Commands are custom slash commands installed in `~/.claude/commands/` and invoke
 
 | Command | Invocation | Description |
 |---|---|---|
-| [libvirt-kcli-caa](./libvirt-kcli-caa/) | `/libvirt-kcli-caa` | Set up, build, and test cloud-api-adaptor with libvirt/kcli locally (amd64, Ubuntu 24.04 podvm via mkosi) |
+| [libvirt-podvm-qcow2](./libvirt-podvm-qcow2/) | `/libvirt-podvm-qcow2` | Build a Ubuntu 24.04 podvm qcow2 image for libvirt (amd64) using mkosi — compiles guest binaries first, then builds the disk image |
+| [libvirt-kcli-caa](./libvirt-kcli-caa/) | `/libvirt-kcli-caa` | Set up and test cloud-api-adaptor with libvirt/kcli locally — creates the peer-pods cluster, uploads the podvm qcow2, installs CAA, and runs e2e tests |
 | [aws-podvm-ami](./aws-podvm-ami/) | `/aws-podvm-ami` | Build a debug Ubuntu podvm mkosi image (TEE_PLATFORM=amd), upload to S3, and register as an AWS AMI |
 | [aws-eks-caa](./aws-eks-caa/) | `/aws-eks-caa` | Set up CAA on AWS EKS with a custom podvm AMI, run a peer-pod test workload, and tear everything down |
 | [aws-test-pr](./aws-test-pr/) | `/aws-test-pr` | Test a cloud-api-adaptor GitHub PR against an existing EKS peer-pods cluster — detects what to rebuild, builds and pushes artifacts, deploys to the cluster, and runs a smoke test |
@@ -60,9 +61,14 @@ git pull
 Once installed, invoke a command with its slash command in any Claude Code session:
 
 ```
+/libvirt-podvm-qcow2
+/libvirt-podvm-qcow2 --debug
+
 /libvirt-kcli-caa setup
-/libvirt-kcli-caa build --debug
+/libvirt-kcli-caa setup --image ~/path/to/podvm-ubuntu-amd64.qcow2
 /libvirt-kcli-caa test --filter TestLibvirtCreatePeerPod
+/libvirt-kcli-caa test --kbs
+/libvirt-kcli-caa teardown
 
 /aws-podvm-ami build
 /aws-podvm-ami upload --bucket my-bucket --region us-east-2
