@@ -31,15 +31,15 @@ Skills extend Claude Code via the Skill tool and are installed in `~/.claude/ski
 ### Install a single command
 
 ```bash
-git clone https://github.com/confidential-devhub/claude-skills
-cp claude-skills/<command-name>/<command-name>.md ~/.claude/commands/
+git clone https://github.com/confidential-devhub/claude-agent-primitives
+cp claude-agent-primitives/<command-name>/<command-name>.md ~/.claude/commands/
 ```
 
 ### Install all commands
 
 ```bash
-git clone https://github.com/confidential-devhub/claude-skills
-for cmd_dir in claude-skills/*/; do
+git clone https://github.com/confidential-devhub/claude-agent-primitives
+for cmd_dir in claude-agent-primitives/*/; do
     cmd_name=$(basename "$cmd_dir")
     cp "$cmd_dir/$cmd_name.md" ~/.claude/commands/
 done
@@ -50,7 +50,7 @@ Claude Code picks up files in `~/.claude/commands/` automatically — no restart
 ### Keep commands up to date
 
 ```bash
-cd claude-skills
+cd claude-agent-primitives
 git pull
 # Re-run the copy commands above
 ```
